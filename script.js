@@ -27,10 +27,91 @@ function renderFlake (snowContainer) {
     snowContainer.appendChild(flakeContainer);
 
     setTimeout(renderFlake, 500, snowContainer);
+}
 
+function renderSanta(snowContainer) {
+
+    const santaContainer = document.createElement('div');
+    santaContainer.id = 'santa-container';
+
+    const sleighImg = document.createElement('img');
+    sleighImg.src = 'images/others/sleigh.png';
+
+    santaContainer.appendChild(sleighImg);
+
+        for(let i = 0; i < 3; i++) {
+            const reindeerContainer = document.createElement('div');
+            reindeerContainer.classList.add('reindeer-container');
+
+            const reindeerImg = document.createElement('img');
+            reindeerImg.src = 'images/others/reindeer.png';
+
+            reindeerContainer.appendChild(reindeerImg);
+            santaContainer.appendChild(reindeerContainer);
+        }
+
+        snowContainer.appendChild(santaContainer);
+}
+
+function addAudioElement(snowContainer) {
+    const audioElement = document.createElement('audio');
+    audioElement.src = 'sounds/jinglebells.mp3';
+    audioElement.play();
+
+    snowContainer.appendChild(audioElement);
+}
+
+function renderStartButton() {
+    const button = document.createElement('button');
+    button.innerText = 'Pada śnieg';
+    snowContainer.appendChild(button);
+    return button;
 }
 
 const snowContainer = renderSnowContainer();
-renderFlake(snowContainer);
+
+const button = renderStartButton(snowContainer);
+
+button.addEventListener('click', () => {
+
+    renderSanta(snowContainer);
+    renderFlake(snowContainer);
+    addAudioElement(snowContainer);
+
+    let lastPosition = 0;
+    let santaDimenstions;
+
+    document.addEventListener('mousemove', (e) => {
+    const santaContainer = document.querySelector('#santa-container');
+
+    santaDimenstions = santaDimenstions || santaContainer.getBoundingClientRect();
+
+    if(lastPosition < e.pageX) {
+        santaContainer.classList.add('flipped-santa');
+        santaContainer.style.left = `${e.pageX - santaDimenstions.width}px`;
+        santaContainer.style.top = `${e.pageY}px`; 
+    }
+
+    if(lastPosition > e.pageX) {
+        santaContainer.classList.remove('flipped-santa');
+        santaContainer.style.left = `${e.pageX}px`; 
+        santaContainer.style.top = `${e.pageY}px`; 
+    }
+
+    lastPosition = e.pageX;
+});
+    button.remove();
+}, 
+{
+    once: true,
+}
+);
+
+
+
+
+
+
+
 
 
